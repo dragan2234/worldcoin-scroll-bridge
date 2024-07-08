@@ -32,8 +32,5 @@ yarn-error.log*
 /broadcast/*
 /broadcast/*/31337/
 
-lib
-out
-
 # remappings
 remappings.txt
