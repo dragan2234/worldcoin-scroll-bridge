@@ -12,9 +12,9 @@ declare -a dependencies=(
     "PaulRBerg/prb-test"
     "foundry-rs/forge-std"
     "rari-capital/solmate"
-    "OpenZeppelin/openzeppelin-contracts"
-    "OpenZeppelin/openzeppelin-contracts-upgradeable"
-    "fx-portal/contracts"
+    "OpenZeppelin/openzeppelin-contracts@v4.8.0"
+    "OpenZeppelin/openzeppelin-contracts-upgradeable@v4.8.1"
+    "fx-portal/contracts@v1.0.5"
 )
 
 # Loop through the array and install each dependency

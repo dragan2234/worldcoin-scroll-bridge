@@ -425,7 +425,9 @@ async function deploymentTestnet(config) {
   await deployScrollStateBridgeSepolia(config);
   await getScrollStateBridgeAddress(config);
   await saveConfiguration(config);
-  await localTransferOwnershipOfScrollWorldIDToStateBridge(config);
+
+  //Consider transferring ownership for other EOAs/contracts, this demo will use the deployer address
+  //await localTransferOwnershipOfScrollWorldIDToStateBridge(config);
 }
 
 async function deployScrollStateBridgeSepolia(config) {

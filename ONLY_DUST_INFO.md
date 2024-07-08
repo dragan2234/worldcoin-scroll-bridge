@@ -43,50 +43,6 @@ Build the contracts:
 make build
 ```
 
-### Clean
-
-Delete the build artifacts and cache directories:
-
-```sh
-make clean
-```
-
-### Coverage
-
-Get a test coverage report:
-
-```sh
-make coverage
-```
-
-### Format
-
-Format the contracts with `forge fmt` and the rest of the files (.js, .md) with Prettier:
-
-```sh
-make format
-```
-
-### Gas Usage
-
-Get a gas report:
-
-```sh
-make snapshot
-```
-
-```sh
-make bench
-```
-
-### Lint
-
-Lint the contracts:
-
-```sh
-make lint
-```
-
 ### Test
 
 Run the tests:
@@ -105,3 +61,4 @@ Ensure to fund this wallet with sepolia eth and scroll sepolia eth to bridge and
 run:
 `make deploy-testnet`
 
+Do you want to load configuration from prior runs? [Y/n]: Y
