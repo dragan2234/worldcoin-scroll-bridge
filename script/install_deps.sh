@@ -9,7 +9,7 @@ fi
 
 # List of dependencies to install
 declare -a dependencies=(
-    "prb/test"
+    "PaulRBerg/prb-test"
     "foundry-rs/forge-std"
     "rari-capital/solmate"
     "OpenZeppelin/openzeppelin-contracts"
