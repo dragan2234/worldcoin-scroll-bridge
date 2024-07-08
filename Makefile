@@ -4,7 +4,7 @@ all: install build
 # ===== Basic Development Rules =======================================================================================
 
 # Install forge dependencies (not needed if submodules are already initialized).
-install:; forge install && yarn install
+install:; ./script/install_deps.sh && yarn install
 
 # Build contracts and inject the Poseidon library.
 build:; forge build
