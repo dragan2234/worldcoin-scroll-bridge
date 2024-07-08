@@ -5,7 +5,7 @@
 [submodule "lib/prb-test"]
 	branch = v0.3.1
 	path = lib/prb-test
-	url = https://github.com/paulrberg/prb-test
+	url = https://github.com/PaulRBerg/prb-test
 [submodule "lib/openzeppelin-contracts"]
 	path = lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
