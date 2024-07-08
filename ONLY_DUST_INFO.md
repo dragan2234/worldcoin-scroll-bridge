@@ -1,6 +1,10 @@
 ## Introduction
 This project is for bridging the worldcoin state (such as the merkle root) from ethereum to scroll.
 
+note: for a working project please checkout the code from:
+
+
+
 The task at hand was maintained in:
 https://github.com/SwineCoder101/world-id-state-bridge/tree/scroll-integration
 
@@ -100,3 +104,4 @@ Ensure to fund this wallet with sepolia eth and scroll sepolia eth to bridge and
 ### Deploy
 run:
 `make deploy-testnet`
+

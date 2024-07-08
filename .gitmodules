@@ -20,4 +20,4 @@
 	branch = v1.0.5
 [submodule "lib/solmate"]
 	path = lib/solmate
-	url = https://github.com/transmissions11/solmate
+	url = https://github.com/rari-capital/solmate
