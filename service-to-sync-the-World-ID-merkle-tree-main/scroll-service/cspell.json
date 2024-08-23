@@ -1,0 +1,20 @@
+{
+    "version": "0.1",
+    "words": [
+        "Bloemen",
+        "clippy",
+        "compat",
+        "cpus",
+        "itertools",
+        "Kubernetes",
+        "proptest",
+        "Remco",
+        "rngs",
+        "rustfmt",
+        "sigterm",
+        "smallvec",
+        "structopt",
+        "subcommand",
+        "thiserror"
+    ]
+}
