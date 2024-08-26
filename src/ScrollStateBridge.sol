@@ -252,7 +252,3 @@ contract ScrollStateBridge is Ownable2Step {
     }
 
 }
-
-// Fixes: Added payable to functions using sendMessage in the ScrollStateBridge and removed hardcoded value of 0 to use msg.value
-// Added refundAddress in functions that sendMessage incase of an error or potentially malicious behavior to prevent locked balances or failures
-// Added Natspec where necessary
