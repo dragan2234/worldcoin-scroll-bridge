@@ -20,8 +20,6 @@ The **Worldcoin Scroll Bridge** project is currently in a stable state with the 
 
 1. **State Bridge Contracts**:
    - Deployed on Ethereum mainnet and supported L2 networks.
-   - Audited by Nethermind, ensuring security and reliability.
-   - Supports key cryptographic operations and cross-chain messaging.
 
 2. **Relayer Service**:
    - Implemented in Golang to automate root propagation.
