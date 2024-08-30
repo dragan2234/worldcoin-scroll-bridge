@@ -133,7 +133,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.expectEmit(true, true, true, true);
         emit RootPropagated(sampleRoot);
 
-        scStateBridge.propagateRoot();
+        scStateBridge.propagateRoot(msg.sender);
 
         // Bridging is not emulated
     }
@@ -174,7 +174,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         emit OwnershipTransferredScroll(owner, newOwner, isLocal);
 
         vm.prank(owner);
-        scStateBridge.transferOwnershipScroll(newOwner, isLocal);
+        scStateBridge.transferOwnershipScroll(newOwner, isLocal, owner);
     }
 
     /// @notice tests whether the StateBridge contract can set root history expiry on Optimism and Polygon
@@ -184,7 +184,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         emit SetRootHistoryExpiry(_rootHistoryExpiry);
 
         vm.prank(owner);
-        scStateBridge.setRootHistoryExpiry(_rootHistoryExpiry);
+        scStateBridge.setRootHistoryExpiry(_rootHistoryExpiry, owner);
     }
 
     /// @notice tests whether the StateBridge contract can set the opGasLimit for sendRootOptimism
@@ -261,7 +261,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.expectRevert(AddressZero.selector);
 
         vm.prank(owner);
-        scStateBridge.transferOwnershipScroll(address(0), true);
+        scStateBridge.transferOwnershipScroll(address(0), true, owner);
     }
 
     /// @notice tests that the StateBridge contract's ownership can't be changed by a non-owner
@@ -276,7 +276,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.expectRevert("Ownable: caller is not the owner");
 
         vm.prank(nonOwner);
-        scStateBridge.transferOwnershipScroll(newOwner, isLocal);
+        scStateBridge.transferOwnershipScroll(newOwner, isLocal, nonOwner);
     }
 
     /// @notice tests whether the StateBridge contract can set root history expiry on Optimism and Polygon
@@ -290,7 +290,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.expectRevert("Ownable: caller is not the owner");
 
         vm.prank(nonOwner);
-        scStateBridge.setRootHistoryExpiry(_rootHistoryExpiry);
+        scStateBridge.setRootHistoryExpiry(_rootHistoryExpiry, nonOwner);
     }
 
     /// @notice Tests that a nonPendingOwner can't accept ownership of StateBridge

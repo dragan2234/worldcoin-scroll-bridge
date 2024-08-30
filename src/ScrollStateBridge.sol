@@ -123,6 +123,9 @@ contract ScrollStateBridge is Ownable2Step {
     /// @notice Sends the latest WorldID Identity Manager root to Scroll
     /// @dev Calls this method on the L1 Proxy contract to relay roots to Scroll
     function propagateRoot(address _refundAddress) external payable { // mark as payable to send value along
+        if(_refundAddress == address(0)) {
+            revert AddressZero();
+        }
         uint256 latestRoot = IWorldIDIdentityManager(worldIDAddress).latestRoot();
 
         // The `encodeCall` function is strongly typed, so this checks that we are passing the
@@ -154,6 +157,9 @@ contract ScrollStateBridge is Ownable2Step {
         if (_owner == address(0)) {
             revert AddressZero();
         }
+         if(_refundAddress == address(0)) {
+            revert AddressZero();
+        }
 
         // The `encodeCall` function is strongly typed, so this checks that we are passing the
         // correct data to the Scroll Messenger.
@@ -179,6 +185,9 @@ contract ScrollStateBridge is Ownable2Step {
     /// @param _rootHistoryExpiry new root history expiry
     /// @param _refundAddress address to refund value to
     function setRootHistoryExpiry(uint256 _rootHistoryExpiry, address _refundAddress) external payable onlyOwner { // mark as payable to send value along
+         if(_refundAddress == address(0)) {
+            revert AddressZero();
+        }
         // The `encodeCall` function is strongly typed, so this checks that we are passing the
         // correct data to the Scroll bridge.
         bytes memory message =
