@@ -20,9 +20,10 @@ The **Worldcoin Scroll Bridge** project is currently in a stable state with the 
 
 1. **State Bridge Contracts**:
    - Deployed on Ethereum mainnet and supported L2 networks.
-
+   - Audited by Nethermind, ensuring security and reliability.
+  
 2. **Relayer Service**:
-   - Implemented in Golang to automate root propagation.
+   - Implemented in Rust to automate root propagation.
    - Runs on a cron job schedule, ensuring regular updates.
    - Tested and ready for deployment in both development and production environments.
 
@@ -38,7 +39,6 @@ The **Worldcoin Scroll Bridge** project is currently in a stable state with the 
    - Comprehensive documentation available for setup, deployment, and usage.
    - Active community and GitHub repository for contributions and support.
 
----
 
 ## Detailed Documentation
 
@@ -50,7 +50,7 @@ The **Worldcoin Scroll Bridge** architecture is designed to ensure secure and ef
   
 - **L2 Contract**: The contract on the L2 network receives the propagated root and updates its state. Ownership and authorization checks are handled by the `CrossDomainOwnable3` contract, ensuring only the mainnet contract can initiate root propagation.
 
-- **Relayer Service**: A Golang-based service that periodically calls the `propagateRoot()` function on the L2 contract. It is responsible for ensuring that the World ID root is consistently propagated to the target networks.
+- **Relayer Service**: A Rust-based service that periodically calls the `propagateRoot()` function on the L2 contract. It is responsible for ensuring that the World ID root is consistently propagated to the target networks.
 
 ### 2. Supported Networks
 
@@ -69,7 +69,7 @@ The bridge is designed to support additional networks in the future, with a focu
 
 The **Relayer Service** automates the process of propagating the World ID root from Ethereum mainnet to the Scroll network. Key implementation details include:
 
-- **Golang Environment Setup**: The service is implemented in Golang, ensuring high performance and reliability. It uses a cron job to schedule periodic calls to the `propagateRoot()` function.
+- **Rust Environment Setup**: The service is implemented in Rust, ensuring high performance and reliability. It uses a cron job to schedule periodic calls to the `propagateRoot()` function.
   
 - **Interaction with Smart Contracts**: The service interacts with the ScrollStateBridge contract on the L2 network, sending transactions to propagate the World ID root.
 
@@ -108,9 +108,9 @@ Deploy the contracts to the desired network using the provided deployment script
 **Running the Relayer Service**
 Set up and run the Relayer Service to automate the propagation of the World ID root:
 
-1. Initialize Golang Environment: Ensure Golang is installed and set up on your system.
-2. Install Required Packages: Install the necessary Go packages for Ethereum client interaction and cron scheduling.
-3. Run the Service: Execute the Go program to start the Relayer Service, and monitor the logs to ensure successful root propagation.
+1. Initialize Rust Environment: Ensure Rust is installed and set up on your system.
+2. Install Required Packages:  Install the necessary Rust crates for Ethereum client interaction and cron scheduling.
+3. Run the Service: Execute the Rust program to start the Relayer Service, and monitor the logs to ensure successful root propagation.
 4. Deployment and Production
 For deploying the Worldcoin Scroll Bridge and Relayer Service in a production environment, follow these steps:
 
