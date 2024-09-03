@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "scroll-service"
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080
+paths:
+  /metrics:
+    servers:
+      - url: http://localhost:9998
+    get:
+      summary: "Returns Prometheus application metrics"
+      responses:
+        "200":
+          description: "Sample response: Details about a user by ID"
+          content:
+            "application/text":
+              example: ""
+        default:
+          description: Unexpected error
+  /serviceStatus:
+    get:
+      summary: "Returns the scroll service state"
+      responses:
+        "200":
+          description: "Scroll service data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerStatusResponse"
+        "400":
+          description: "Invalid request"
+          content:
+            application/json:
+              schema:
+                description: "Could not get service status"
+                type: "string"
+
+components:
+  schemas:
+    ServerStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+           enum: ["unsynced", "pending", "synced"]
+        last_synced:
+          type: string
+          format: date-time
+          nullable: true
+  
