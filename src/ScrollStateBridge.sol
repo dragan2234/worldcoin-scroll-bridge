@@ -132,7 +132,7 @@ contract ScrollStateBridge is Ownable2Step {
         // correct data to the Scroll messenger
         bytes memory message = abi.encodeCall(IScrollWorldID.receiveRoot, (latestRoot));
 
-        IScrollMessenger(scrollMessengerAddress).sendMessage(
+        IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
@@ -166,7 +166,7 @@ contract ScrollStateBridge is Ownable2Step {
         bytes memory message =
             abi.encodeCall(IScrollCrossDomainOwnable.transferOwnership, (_owner, _isLocal));
 
-        IScrollMessenger(scrollMessengerAddress).sendMessage(
+        IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
@@ -193,7 +193,7 @@ contract ScrollStateBridge is Ownable2Step {
         bytes memory message =
             abi.encodeCall(IRootHistory.setRootHistoryExpiry, (_rootHistoryExpiry));
 
-        IScrollMessenger(scrollMessengerAddress).sendMessage(
+        IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
