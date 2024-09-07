@@ -12,7 +12,6 @@ This project is crucial for enabling seamless identity verification across diffe
 
 - **State Bridge Contracts**: Smart contracts deployed on Ethereum mainnet and L2 networks to manage the propagation of the World ID Merkle tree root.
 - **Relayer Service**: A Rust-based automated service that periodically invokes the `propagateRoot()` function to ensure timely updates of the World ID root on the target networks.
-- **Cross-Chain Messaging**: Leveraging native L1 <> L2 messaging protocols to ensure secure and reliable root propagation.
 
 ### Current State of the Project
 
@@ -119,7 +118,7 @@ For deploying the Worldcoin Scroll Bridge and Relayer Service in a production en
 - Security Best Practices: Implement security measures to protect private keys and sensitive data, ensuring the integrity of the bridge.
 - Contributing to the Project
 We welcome contributions from the community to improve the Worldcoin Scroll Bridge. Whether it's fixing bugs, adding new features, or improving documentation, your input is valuable.
-**Contributions**
+### **Contributions**
 - Fork the Repository: Start by forking the repository and cloning it locally.
 - Make Your Changes: Implement your changes and test them thoroughly.
 - Submit a Pull Request: Once you're satisfied with your changes, submit a pull request for review.
