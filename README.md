@@ -11,7 +11,7 @@ This project is crucial for enabling seamless identity verification across diffe
 ### Key Components
 
 - **State Bridge Contracts**: Smart contracts deployed on Ethereum mainnet and L2 networks to manage the propagation of the World ID Merkle tree root.
-- **Relayer Service**: A Golang-based automated service that periodically invokes the `propagateRoot()` function to ensure timely updates of the World ID root on the target networks.
+- **Relayer Service**: A Rust-based automated service that periodically invokes the `propagateRoot()` function to ensure timely updates of the World ID root on the target networks.
 - **Cross-Chain Messaging**: Leveraging native L1 <> L2 messaging protocols to ensure secure and reliable root propagation.
 
 ### Current State of the Project
