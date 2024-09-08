@@ -1,0 +1,33 @@
+[app]
+provers_urls = '[]'
+
+[network]
+# Address of ScrollBridge contract on blockchain.
+scroll_bridge_address = '0xA268281948353043A79d1da3cd173019e29d9d91'
+
+[providers]
+# Blockchain API URL (anvil or geth)
+l1_network_provider = "https://eth-sepolia.g.alchemy.com/v2/sgd1Uq6Y0HvK2Hksy0tG9EDrE3agLuVO" 
+l2_network_provider = "https://scroll-public.scroll-testnet.quiknode.pro" 
+
+[relayer]
+kind = "tx_sitter"
+# OpenZeppelin Defender API Key + API Secret
+# oz_api_url = "http://api.defender.openzeppelin.com"
+# oz_api_key = "jV7XNG16F6YqeHogsXcoxbrNDyz9HYNA"
+# oz_api_secret= "2UF5PBPJvxBQd1canr7uFoDFV5DNMXgbQEEK8tyeK948bvdHP42rNGxj2fdB8AdA"
+# oz_address = "0xe2aa5f6e09dc06cAA0728d5A8aEE4d3c71c7Ff3F"
+
+
+# URL of TX-sitter API + API token
+tx_sitter_url = "http://localhost:3000/1/api/YKxkLHafQQi83-kMmt9_SrGTQ7wEMBwY9bEqCvddBKU="
+tx_sitter_address = "0x8f643b962d6d6120ef8a9c3f3428b5e487b75daf"
+tx_sitter_gas_limit = 200000
+
+
+[database]
+database = "postgres://postgres:password@localhost:5432/service?sslmode=disable"
+
+[server]
+# Port to run scroll-bridge-service API on
+address = "0.0.0.0:8080"

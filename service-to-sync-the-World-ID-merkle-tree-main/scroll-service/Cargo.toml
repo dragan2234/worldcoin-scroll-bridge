@@ -1,0 +1,98 @@
+[package]
+name = "scroll-service"
+version = "2.0.0"
+authors = ["world-coin"]
+edition = "2021"
+homepage = ""
+repository = ""
+description = "A tool that sync Scoll World to WorldID"
+keywords = ["worldcoin", "protocol", "signup"]
+categories = ["cryptography::cryptocurrencies"]
+readme = "Readme.md"
+license-file = "LICENSE.md"
+build = "build.rs"
+
+[features]
+default = []
+
+
+[dependencies]
+anyhow = { version = "1.0.68" }
+async-stream = "0.3.3"
+async-trait = "0.1.64"
+axum = "0.6.4"
+axum-server = "0.4.4"
+bytes = "1.4.0"
+chrono = { version = "0.4.19", features = ["serde"] }
+clap = { version = "4.0", features = ["derive"] }
+telemetry-batteries = { git = "https://github.com/worldcoin/telemetry-batteries.git", rev = "802a4f39f358e077b11c8429b4c65f3e45b85959" }
+config = "0.13.4"
+ethers = { version = "2.0.10", features = ["ws", "ipc", "openssl", "abigen"] }
+ethers-solc = "2.0.10"
+eyre = "0.6"
+futures = "0.3"
+futures-util = { version = "^0.3" }
+hex = "0.4.3"
+hex-literal = "0.4.1"
+humantime = "2.1.0"
+humantime-serde = "1.1.1"
+hyper = { version = "^0.14.17", features = ["server", "tcp", "http1", "http2"] }
+indoc = "2.0.4"
+once_cell = "1.8"
+oz-api = { path = "crates/oz-api" }
+# We need upstream PR#465 to fix #272.
+prometheus = "0.13.3"
+reqwest = { version = "0.11.18", features = ["json"] }
+ruint = { version = "1.12.1", features = ["primitive-types", "sqlx"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sqlx = { version = "0.7", features = [
+    "runtime-tokio-native-tls",
+    "any",
+    "postgres",
+    "chrono",
+] }
+take_mut = "0.2.2"
+tempfile = "3.5.0"
+thiserror = "1.0"
+tokio = { version = "1.17", features = [
+    "signal",
+    "macros",
+    "rt",
+    "sync",
+    "time",
+    "rt-multi-thread",
+    "tracing",
+    "test-util",
+] }
+toml = "0.8.8"
+tracing = "0.1"
+tracing-futures = "0.2"
+tracing-subscriber = '0.3.18'
+tx-sitter-client = { path = "crates/tx-sitter-client" }
+url = { version = "2.2", features = ["serde"] }
+zeroize = "1.6.0"
+
+[dev-dependencies]
+dotenv = "0.15.0"
+hex = "0.4.3"
+lazy_static = "1.4.0"
+maplit = "1.0.2"
+micro-oz = { path = "crates/micro-oz" }
+postgres-docker-utils = { path = "crates/postgres-docker-utils" }
+regex = { version = "1.7.1", features = ["std"] }
+similar-asserts = "1.5.0"
+test-case = "3.0"
+testcontainers = "0.15.0"
+testcontainers-modules = { version = "0.3.7", features = ["postgres"] }
+tracing-subscriber = "0.3.11"
+tracing-test = "0.2"
+
+[profile.release]
+panic = "abort"
+overflow-checks = true
+lto = "thin"
+debug = true
+
+[profile.dev]
+panic = "abort"
