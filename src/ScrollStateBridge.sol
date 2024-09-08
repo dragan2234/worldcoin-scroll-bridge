@@ -87,6 +87,9 @@ contract ScrollStateBridge is Ownable2Step {
     /// @notice Emitted when an attempt is made to set an address to zero
     error AddressZero();
 
+    /// @notice Emitted when an attempt is made to send an insufficient amount of ETH
+    error InsufficientFunds();
+
     ///////////////////////////////////////////////////////////////////
     ///                         CONSTRUCTOR                         ///
     ///////////////////////////////////////////////////////////////////
@@ -122,9 +125,12 @@ contract ScrollStateBridge is Ownable2Step {
 
     /// @notice Sends the latest WorldID Identity Manager root to Scroll
     /// @dev Calls this method on the L1 Proxy contract to relay roots to Scroll
-    function propagateRoot(address _refundAddress) external payable { // mark as payable to send value along
+    function propagateRoot(address _refundAddress, uint256 _value) external payable { // mark as payable to send value along
         if(_refundAddress == address(0)) {
             revert AddressZero();
+        }
+        if(msg.value < _value){
+            revert InsufficientFunds();
         }
         uint256 latestRoot = IWorldIDIdentityManager(worldIDAddress).latestRoot();
 
@@ -136,7 +142,7 @@ contract ScrollStateBridge is Ownable2Step {
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            msg.value, // should use msg.value instead of hardcoding
+            _value, 
             message,
             // gas limit
             _gasLimitPropagateRoot,
@@ -152,13 +158,17 @@ contract ScrollStateBridge is Ownable2Step {
     /// @param _owner new owner (EOA or contract)
     /// @param _isLocal true if new owner is on Scroll, false if it is a cross-domain owner
     /// @param _refundAddress address to refund value to
+    /// @param _value value to send
     /// @custom:revert if _owner is set to the zero address
-    function transferOwnershipScroll(address _owner, bool _isLocal, address _refundAddress) external payable onlyOwner { // mark as payable to send value along
+    function transferOwnershipScroll(address _owner, bool _isLocal, uint256 _value,  address _refundAddress) external payable onlyOwner { // mark as payable to send value along
         if (_owner == address(0)) {
             revert AddressZero();
         }
          if(_refundAddress == address(0)) {
             revert AddressZero();
+        }
+        if(msg.value < _value){
+            revert InsufficientFunds();
         }
 
         // The `encodeCall` function is strongly typed, so this checks that we are passing the
@@ -170,7 +180,7 @@ contract ScrollStateBridge is Ownable2Step {
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            msg.value, // should use msg.value instead of hardcoding
+            _value, 
             message,
             // gas limit
             _gasLimitTransferOwnership,
@@ -184,9 +194,12 @@ contract ScrollStateBridge is Ownable2Step {
     /// @notice Adds functionality to the StateBridge to set the root history expiry on ScrollWorldID
     /// @param _rootHistoryExpiry new root history expiry
     /// @param _refundAddress address to refund value to
-    function setRootHistoryExpiry(uint256 _rootHistoryExpiry, address _refundAddress) external payable onlyOwner { // mark as payable to send value along
+    function setRootHistoryExpiry(uint256 _rootHistoryExpiry, uint256 _value, address _refundAddress) external payable onlyOwner { // mark as payable to send value along
          if(_refundAddress == address(0)) {
             revert AddressZero();
+        }
+        if(msg.value < _value){
+            revert InsufficientFunds();
         }
         // The `encodeCall` function is strongly typed, so this checks that we are passing the
         // correct data to the Scroll bridge.
@@ -197,7 +210,7 @@ contract ScrollStateBridge is Ownable2Step {
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            msg.value, // should use msg.value instead of hardcoding
+            _value, 
             message,
             // gas limit
             _gasLimitSetRootHistoryExpiry,
