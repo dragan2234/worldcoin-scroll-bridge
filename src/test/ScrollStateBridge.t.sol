@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
-import {ScrollStateBridge} from "src/ScrollStateBridge.sol";   
+import {ScrollStateBridge} from "src/ScrollStateBridge.sol";
 import {MockWorldIDIdentityManager} from "src/mock/MockWorldIDIdentityManager.sol";
 import {MockBridgedWorldID} from "src/mock/MockBridgedWorldID.sol";
 
@@ -16,7 +16,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
     ///                        STORAGE CONFIG                       ///
     ///////////////////////////////////////////////////////////////////
     uint256 public mainnetFork;
-    string private SEPOLIA_RPC_URL = vm.envString("MAINNET_RPC_URL");
+    string private MAINNET_RPC_URL = vm.envString("MAINNET_RPC_URL");
 
     /// @notice emitted if there is no CrossDomainMessenger contract deployed on the fork
     error invalidCrossDomainMessengerFork();
@@ -34,7 +34,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
     address public opWorldIDAddress;
 
     /// @notice address for OP Stack chain Ethereum mainnet L1CrossDomainMessenger contract
-    address public scrollCrossDomainMessengerAddress;
+    address public opCrossDomainMessengerAddress;
 
     uint256 public sampleRoot;
 
@@ -56,10 +56,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
     /// to the WorldID Identity Manager contract away
     /// @param previousOwner The previous owner of the OPWorldID contract
     /// @param newOwner The new owner of the OPWorldID contract
-    /// @param isLocal Whether the ownership transfer is local (Optimism/OP Stack chain EOA/contract) or an Ethereum EOA or contract
-    event OwnershipTransferredScroll(
-        address indexed previousOwner, address indexed newOwner, bool isLocal
-    );
+    event OwnershipTransferredScroll(address indexed previousOwner, address indexed newOwner);
 
     /// @notice Emitted when the the StateBridge sets the root history expiry for OpWorldID and PolygonWorldID
     /// @param rootHistoryExpiry The new root history expiry
@@ -92,10 +89,18 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
 
     function setUp() public {
         /// @notice Create a fork of the Ethereum mainnet
-        mainnetFork = vm.createSelectFork(SEPOLIA_RPC_URL);
+        mainnetFork = vm.createFork(MAINNET_RPC_URL);
 
-        scrollCrossDomainMessengerAddress = address(0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367);
-    
+        vm.selectFork(mainnetFork);
+        /// @notice Roll the fork to a block where both Optimim's and Base's crossDomainMessenger contract is deployed
+        /// @notice and the Base crossDomainMessenger ResolvedDelegateProxy target address is initialized
+        vm.rollFork(17711915);
+
+        if (block.chainid == 1) {
+            opCrossDomainMessengerAddress = address(0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1);
+        } else {
+            revert invalidCrossDomainMessengerFork();
+        }
 
         // inserting mock root
         sampleRoot = uint256(0x111);
@@ -104,11 +109,11 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
 
         opWorldIDAddress = address(0x1);
 
-        scStateBridge =
-            new ScrollStateBridge(mockWorldIDAddress, opWorldIDAddress, scrollCrossDomainMessengerAddress);
+        scStateBridge = new ScrollStateBridge(
+            mockWorldIDAddress, opWorldIDAddress, opCrossDomainMessengerAddress
+        );
 
         owner = scStateBridge.owner();
-        deal(owner, 100 ether);
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -126,7 +131,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.expectEmit(true, true, true, true);
         emit RootPropagated(sampleRoot);
 
-        scStateBridge.propagateRoot{value: 2 ether}(address(this), 0);
+        scStateBridge.propagateRoot(msg.sender);
 
         // Bridging is not emulated
     }
@@ -158,16 +163,15 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
 
     /// @notice tests whether the StateBridge contract can transfer ownership of the OPWorldID contract
     /// @param newOwner The new owner of the OPWorldID contract (foundry fuzz)
-    /// @param isLocal Whether the ownership transfer is local (Optimism EOA/contract) or an Ethereum EOA or contract
-    function test_owner_transferOwnershipOp_succeeds(address newOwner, bool isLocal) public {
+    function test_owner_transferOwnershipOp_succeeds(address newOwner) public {
         vm.assume(newOwner != address(0));
-        // vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true, true, true);
 
         // CrossDomainOwnable3.sol transferOwnership event
-        emit OwnershipTransferredScroll(owner, newOwner, isLocal);
+        emit OwnershipTransferredScroll(owner, newOwner);
 
         vm.prank(owner);
-        scStateBridge.transferOwnershipScroll{value: 2 ether}(newOwner, isLocal,0, owner);
+        scStateBridge.transferOwnershipScroll(newOwner, owner);
     }
 
     /// @notice tests whether the StateBridge contract can set root history expiry on Optimism and Polygon
@@ -177,7 +181,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         emit SetRootHistoryExpiry(_rootHistoryExpiry);
 
         vm.prank(owner);
-        scStateBridge.setRootHistoryExpiry{value: 2 ether}(_rootHistoryExpiry,0, owner);
+        scStateBridge.setRootHistoryExpiry(_rootHistoryExpiry, owner);
     }
 
     /// @notice tests whether the StateBridge contract can set the opGasLimit for sendRootOptimism
@@ -227,11 +231,11 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
     function test_cannotInitializeConstructorWithZeroAddresses_reverts() public {
         vm.expectRevert(AddressZero.selector);
         scStateBridge =
-            new ScrollStateBridge(address(0), opWorldIDAddress, scrollCrossDomainMessengerAddress);
+            new ScrollStateBridge(address(0), opWorldIDAddress, opCrossDomainMessengerAddress);
 
         vm.expectRevert(AddressZero.selector);
         scStateBridge =
-            new ScrollStateBridge(mockWorldIDAddress, address(0), scrollCrossDomainMessengerAddress);
+            new ScrollStateBridge(mockWorldIDAddress, address(0), opCrossDomainMessengerAddress);
 
         vm.expectRevert(AddressZero.selector);
         scStateBridge = new ScrollStateBridge(mockWorldIDAddress, opWorldIDAddress, address(0));
@@ -254,22 +258,18 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.expectRevert(AddressZero.selector);
 
         vm.prank(owner);
-        scStateBridge.transferOwnershipScroll{value: 1 ether}(address(0), true, 0, owner);
+        scStateBridge.transferOwnershipScroll(address(0), owner);
     }
 
     /// @notice tests that the StateBridge contract's ownership can't be changed by a non-owner
     /// @param newOwner The new owner of the StateBridge contract (foundry fuzz)
-    function test_notOwner_transferOwnershipOp_reverts(
-        address nonOwner,
-        address newOwner,
-        bool isLocal
-    ) public {
+    function test_notOwner_transferOwnershipOp_reverts(address nonOwner, address newOwner) public {
         vm.assume(nonOwner != owner && newOwner != address(0));
 
         vm.expectRevert("Ownable: caller is not the owner");
 
         vm.prank(nonOwner);
-        scStateBridge.transferOwnershipScroll(newOwner, isLocal,0, nonOwner);
+        scStateBridge.transferOwnershipScroll(newOwner, nonOwner);
     }
 
     /// @notice tests whether the StateBridge contract can set root history expiry on Optimism and Polygon
@@ -283,7 +283,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.expectRevert("Ownable: caller is not the owner");
 
         vm.prank(nonOwner);
-        scStateBridge.setRootHistoryExpiry(_rootHistoryExpiry, 0, nonOwner);
+        scStateBridge.setRootHistoryExpiry(_rootHistoryExpiry, nonOwner);
     }
 
     /// @notice Tests that a nonPendingOwner can't accept ownership of StateBridge
@@ -329,6 +329,4 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         vm.prank(owner);
         scStateBridge.setGasLimitTransferOwnershipScroll(0);
     }
-
-    receive() external payable{}
 }
