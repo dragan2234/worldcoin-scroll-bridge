@@ -5,7 +5,6 @@ import {IScrollWorldID} from "./interfaces/IScrollWorldID.sol";
 import {IRootHistory} from "./interfaces/IRootHistory.sol";
 import {IWorldIDIdentityManager} from "./interfaces/IWorldIDIdentityManager.sol";
 import {Ownable2Step} from "openzeppelin-contracts/access/Ownable2Step.sol";
-import {IScrollCrossDomainOwnable} from "./interfaces/IScrollCrossDomainOwnable.sol";
 
 // Scroll interface for cross domain messaging
 import {IScrollMessenger} from "@scroll-tech/contracts/libraries/IScrollMessenger.sol";
@@ -37,8 +36,7 @@ contract ScrollStateBridge is Ownable2Step {
     uint32 internal _gasLimitTransferOwnership;
 
     /// @notice The default gas limit amount to buy on Scroll
-    uint32 public constant DEFAULT_SCROLL_GAS_LIMIT = 1000000;
-
+    uint32 public constant DEFAULT_SCROLL_GAS_LIMIT = 268000;
 
     ///////////////////////////////////////////////////////////////////
     ///                            EVENTS                           ///
@@ -48,11 +46,7 @@ contract ScrollStateBridge is Ownable2Step {
     /// to the WorldID Identity Manager contract away
     /// @param previousOwner The previous owner of the ScrollWorldID contract
     /// @param newOwner The new owner of the ScrollWorldID contract
-    /// @param isLocal Whether the ownership transfer is local (Scroll)
-    /// or an Ethereum EOA or contract
-    event OwnershipTransferredScroll(
-        address indexed previousOwner, address indexed newOwner, bool isLocal
-    );
+    event OwnershipTransferredScroll(address indexed previousOwner, address indexed newOwner);
 
     /// @notice Emitted when the StateBridge sends a root to the ScrollWorldID contract
     /// @param root The root sent to the ScrollWorldID contract on Scroll
@@ -86,9 +80,6 @@ contract ScrollStateBridge is Ownable2Step {
 
     /// @notice Emitted when an attempt is made to set an address to zero
     error AddressZero();
-
-    /// @notice Emitted when an attempt is made to send an insufficient amount of ETH
-    error InsufficientFunds();
 
     ///////////////////////////////////////////////////////////////////
     ///                         CONSTRUCTOR                         ///
@@ -125,25 +116,17 @@ contract ScrollStateBridge is Ownable2Step {
 
     /// @notice Sends the latest WorldID Identity Manager root to Scroll
     /// @dev Calls this method on the L1 Proxy contract to relay roots to Scroll
-    function propagateRoot(address _refundAddress, uint256 _value) external payable { // mark as payable to send value along
-        if(_refundAddress == address(0)) {
-            revert AddressZero();
-        }
-        if(msg.value < _value){
-            revert InsufficientFunds();
-        }
+    function propagateRoot(address _refundAddress) external payable {
         uint256 latestRoot = IWorldIDIdentityManager(worldIDAddress).latestRoot();
-
-        // The `encodeCall` function is strongly typed, so this checks that we are passing the
-        // correct data to the Scroll messenger
-        bytes memory message = abi.encodeCall(IScrollWorldID.receiveRoot, (latestRoot));
+        uint256 value = 0; // receive root is not a payable function.
 
         IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            _value, 
-            message,
+            value, // should use msg.value instead of hardcoding
+            //message
+            abi.encodeWithSignature("receiveRoot(uint256)", uint256(latestRoot)),
             // gas limit
             _gasLimitPropagateRoot,
             // refund address
@@ -156,62 +139,57 @@ contract ScrollStateBridge is Ownable2Step {
     /// @notice Adds functionality to the StateBridge to transfer ownership
     /// of ScrollWorldID to another contract on L1 or to a local Scroll EOA
     /// @param _owner new owner (EOA or contract)
-    /// @param _isLocal true if new owner is on Scroll, false if it is a cross-domain owner
     /// @param _refundAddress address to refund value to
-    /// @param _value value to send
     /// @custom:revert if _owner is set to the zero address
-    function transferOwnershipScroll(address _owner, bool _isLocal, uint256 _value,  address _refundAddress) external payable onlyOwner { // mark as payable to send value along
+    function transferOwnershipScroll(address _owner, address _refundAddress)
+        external
+        payable
+        onlyOwner
+    {
+        // mark as payable to send value along
         if (_owner == address(0)) {
             revert AddressZero();
         }
-         if(_refundAddress == address(0)) {
+        if (_refundAddress == address(0)) {
             revert AddressZero();
         }
-        if(msg.value < _value){
-            revert InsufficientFunds();
-        }
-
-        // The `encodeCall` function is strongly typed, so this checks that we are passing the
-        // correct data to the Scroll Messenger.
-        bytes memory message =
-            abi.encodeCall(IScrollCrossDomainOwnable.transferOwnership, (_owner, _isLocal));
 
         IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            _value, 
-            message,
+            msg.value, // should use msg.value instead of hardcoding
+            // message
+            abi.encodeWithSignature("transferOwnership(address)", _owner),
             // gas limit
             _gasLimitTransferOwnership,
             // refund address
             _refundAddress
         );
 
-        emit OwnershipTransferredScroll(owner(), _owner, _isLocal);
+        emit OwnershipTransferredScroll(owner(), _owner);
     }
 
     /// @notice Adds functionality to the StateBridge to set the root history expiry on ScrollWorldID
     /// @param _rootHistoryExpiry new root history expiry
     /// @param _refundAddress address to refund value to
-    function setRootHistoryExpiry(uint256 _rootHistoryExpiry, uint256 _value, address _refundAddress) external payable onlyOwner { // mark as payable to send value along
-         if(_refundAddress == address(0)) {
+    function setRootHistoryExpiry(uint256 _rootHistoryExpiry, address _refundAddress)
+        external
+        payable
+        onlyOwner
+    {
+        // mark as payable to send value along
+        if (_refundAddress == address(0)) {
             revert AddressZero();
         }
-        if(msg.value < _value){
-            revert InsufficientFunds();
-        }
-        // The `encodeCall` function is strongly typed, so this checks that we are passing the
-        // correct data to the Scroll bridge.
-        bytes memory message =
-            abi.encodeCall(IRootHistory.setRootHistoryExpiry, (_rootHistoryExpiry));
 
         IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            _value, 
-            message,
+            msg.value, // should use msg.value instead of hardcoding
+            // message
+            abi.encodeWithSignature("setRootHistoryExpiry(uint256)", _rootHistoryExpiry),
             // gas limit
             _gasLimitSetRootHistoryExpiry,
             // refund address
@@ -272,5 +250,4 @@ contract ScrollStateBridge is Ownable2Step {
     function renounceOwnership() public view override onlyOwner {
         revert CannotRenounceOwnership();
     }
-
 }

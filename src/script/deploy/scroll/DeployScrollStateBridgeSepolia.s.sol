@@ -19,7 +19,7 @@ contract DeployScrollStateBridgeSepolia is Script {
     string public root = vm.projectRoot();
     uint256 public privateKey = vm.envUint("PRIVATE_KEY");
     address public worldIDIdentityManagerAddress = vm.envAddress("WORLD_ID_IDENTITY_MANAGER");
-    address public scrollWorldIDAddress = vm.envAddress("SCROLL_WORLD_ID");
+    address public scrollWorldIDAddress = vm.envAddress("SCROLL_SEPOLIA_WORLD_ID_ADDRESS");
 
     function setUp() public {
         ///////////////////////////////////////////////////////////////////
