@@ -94,7 +94,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         /// @notice Create a fork of the Ethereum mainnet
         mainnetFork = vm.createSelectFork(SEPOLIA_RPC_URL);
 
-        opCrossDomainMessengerAddress = address(0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367);
+        scrollCrossDomainMessengerAddress = address(0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367);
     
 
         // inserting mock root
