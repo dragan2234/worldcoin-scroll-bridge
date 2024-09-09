@@ -34,7 +34,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
     address public opWorldIDAddress;
 
     /// @notice address for OP Stack chain Ethereum mainnet L1CrossDomainMessenger contract
-    address public opCrossDomainMessengerAddress;
+    address public scrollCrossDomainMessengerAddress;
 
     uint256 public sampleRoot;
 
@@ -105,7 +105,7 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
         opWorldIDAddress = address(0x1);
 
         scStateBridge =
-            new ScrollStateBridge(mockWorldIDAddress, opWorldIDAddress, opCrossDomainMessengerAddress);
+            new ScrollStateBridge(mockWorldIDAddress, opWorldIDAddress, scrollCrossDomainMessengerAddress);
 
         owner = scStateBridge.owner();
         deal(owner, 100 ether);
@@ -227,11 +227,11 @@ contract ScrollStateBridgeTest is PRBTest, StdCheats {
     function test_cannotInitializeConstructorWithZeroAddresses_reverts() public {
         vm.expectRevert(AddressZero.selector);
         scStateBridge =
-            new ScrollStateBridge(address(0), opWorldIDAddress, opCrossDomainMessengerAddress);
+            new ScrollStateBridge(address(0), opWorldIDAddress, scrollCrossDomainMessengerAddress);
 
         vm.expectRevert(AddressZero.selector);
         scStateBridge =
-            new ScrollStateBridge(mockWorldIDAddress, address(0), opCrossDomainMessengerAddress);
+            new ScrollStateBridge(mockWorldIDAddress, address(0), scrollCrossDomainMessengerAddress);
 
         vm.expectRevert(AddressZero.selector);
         scStateBridge = new ScrollStateBridge(mockWorldIDAddress, opWorldIDAddress, address(0));
