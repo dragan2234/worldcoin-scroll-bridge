@@ -46,7 +46,9 @@ contract ScrollStateBridge is Ownable2Step {
     /// to the WorldID Identity Manager contract away
     /// @param previousOwner The previous owner of the ScrollWorldID contract
     /// @param newOwner The new owner of the ScrollWorldID contract
-    event OwnershipTransferredScroll(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferredScroll(
+        address indexed previousOwner, address indexed newOwner, bool isLocal
+    );
 
     /// @notice Emitted when the StateBridge sends a root to the ScrollWorldID contract
     /// @param root The root sent to the ScrollWorldID contract on Scroll
@@ -141,7 +143,7 @@ contract ScrollStateBridge is Ownable2Step {
     /// @param _owner new owner (EOA or contract)
     /// @param _refundAddress address to refund value to
     /// @custom:revert if _owner is set to the zero address
-    function transferOwnershipScroll(address _owner, address _refundAddress)
+    function transferOwnershipScroll(address _owner, address _refundAddress, bool _isLocal)
         external
         payable
         onlyOwner
@@ -154,20 +156,24 @@ contract ScrollStateBridge is Ownable2Step {
             revert AddressZero();
         }
 
+        uint256 value = 0; // transferOwnership is not a payable function.
+
         IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            msg.value, // should use msg.value instead of hardcoding
+            value,
             // message
-            abi.encodeWithSignature("transferOwnership(address)", _owner),
+            abi.encodeWithSignature(
+                "transferOwnership(address,bool)", address(_owner), bool(_isLocal)
+            ),
             // gas limit
             _gasLimitTransferOwnership,
             // refund address
             _refundAddress
         );
 
-        emit OwnershipTransferredScroll(owner(), _owner);
+        emit OwnershipTransferredScroll(owner(), _owner, _isLocal);
     }
 
     /// @notice Adds functionality to the StateBridge to set the root history expiry on ScrollWorldID
@@ -183,11 +189,13 @@ contract ScrollStateBridge is Ownable2Step {
             revert AddressZero();
         }
 
+        uint256 value = 0; // setRootHistory is not a payable function.
+
         IScrollMessenger(scrollMessengerAddress).sendMessage{value: msg.value}(
             // World ID contract address on Scroll
             scrollWorldIDAddress,
             //value
-            msg.value, // should use msg.value instead of hardcoding
+            value,
             // message
             abi.encodeWithSignature("setRootHistoryExpiry(uint256)", _rootHistoryExpiry),
             // gas limit

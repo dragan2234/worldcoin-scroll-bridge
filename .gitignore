@@ -37,3 +37,6 @@ remappings.txt
 
 /lib/*
 
+lib
+
+cache
