@@ -3,7 +3,6 @@ pragma solidity ^0.8.15;
 
 import {Script} from "forge-std/Script.sol";
 import {ScrollWorldID} from "src/ScrollWorldID.sol";
-import {console} from "forge-std/console.sol";
 
 /// @title Scroll World ID deployment script
 /// @notice forge script to deploy ScrollWorldID.sol to Scroll
@@ -16,23 +15,15 @@ contract DeployScrollWorldID is Script {
     ///////////////////////////////////////////////////////////////////
     string public root = vm.projectRoot();
     uint256 public privateKey = vm.envUint("PRIVATE_KEY");
+    address public l2ScrollMessenger = vm.envAddress("SCROLL_L2_MESSENGER_ADDRESS");
 
     uint8 public treeDepth = uint8(30);
 
     function run() external {
-        console.log("Starting deployment script..."); // Add this log
-        address deployerAddress = vm.addr(privateKey);
-
-        // Log balance of deployer address
-        uint256 deployerBalance = deployerAddress.balance;
-        console.log("Deployer address:", deployerAddress);
-        console.log("Deployer balance (wei):", deployerBalance);
-        require(deployerBalance > 0, "Insufficient balance for deployment");
-
         vm.startBroadcast(privateKey);
-        console.log("Deploying ScrollWorldID...");
-        scrollWorldID = new ScrollWorldID(treeDepth);
-        console.log("ScrollWorldID deployed at:", address(scrollWorldID));
+
+        scrollWorldID = new ScrollWorldID(treeDepth, l2ScrollMessenger);
+
         vm.stopBroadcast();
     }
 }
