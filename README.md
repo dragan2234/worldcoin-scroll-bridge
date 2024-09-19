@@ -1,128 +1,105 @@
-# Worldcoin Scroll Bridge 
+# Worldcoin Scroll Bridge
 
 ## Overview
 
 ### Project Description
-
-The **Worldcoin Scroll Bridge** is a decentralized solution designed to securely propagate the World ID Merkle tree root from the Ethereum mainnet to various Layer 2 (L2) networks, including Optimism, Base, and Polygon PoS. This bridge allows for decentralized identity verification across these networks by ensuring that the latest World ID root is consistently and securely transmitted to the target networks.
-
-This project is crucial for enabling seamless identity verification across different blockchain environments, thereby facilitating the adoption of World ID on L2 networks and beyond. The bridge's architecture is robust, ensuring high security and efficiency in cross-chain communication.
+The **Worldcoin Scroll Bridge** is a decentralized solution designed to securely propagate the World ID Merkle tree root from the Ethereum mainnet to the **Scroll** Layer 2 network. This bridge ensures that the latest World ID root is consistently and securely transmitted to Scroll, facilitating reliable decentralized identity verification within this Layer 2 environment.
 
 ### Key Components
+- **State Bridge Contracts**: There are two key smart contracts involved in the bridge's operation:
+  - **Mainnet Contract**: Deployed on Ethereum mainnet. This contract fetches the latest World ID Merkle tree root using the `latestRoot()` method from the `WorldIDIdentityManagerImplV1` contract and sends it to the Scroll network.
+  - **Scroll Contract**: Deployed on the Scroll network. This contract receives the propagated root and updates its state. It relies on the native L1 <> L2 messaging layer for secure communication.
 
-- **State Bridge Contracts**: Smart contracts deployed on Ethereum mainnet and L2 networks to manage the propagation of the World ID Merkle tree root.
-- **Relayer Service**: A Rust-based automated service that periodically invokes the `propagateRoot()` function to ensure timely updates of the World ID root on the target networks.
+- **Relayer Service**: Implemented in Rust to automate root propagation..
 
 ### Current State of the Project
-
-The **Worldcoin Scroll Bridge** project is currently in a stable state with the following components fully functional:
+The **Worldcoin Scroll Bridge** is in a stable state, with the following components fully operational:
 
 1. **State Bridge Contracts**:
-   - Deployed on Ethereum mainnet and supported L2 networks.
-   - Audited by Nethermind, ensuring security and reliability.
-  
+   - **Ethereum Mainnet Contract**: Fetches the latest World ID root using the `latestRoot()` method.
+   - **Scroll Contract**: Receives and updates the World ID root on Scroll.
+   - Contracts are deployed and operational but have not been audited yet.
+
 2. **Relayer Service**:
-   - Implemented in Rust to automate root propagation.
-   - Runs on a cron job schedule, ensuring regular updates.
-   - Tested and ready for deployment in both development and production environments.
+   - Implemented in Rust for high performance and reliability.
+   - Runs on a cron job schedule for regular updates.
+   - Fully tested and ready for deployment in both development and production environments.
 
-3. **Supported Networks**:
-   - Fully operational on Optimism, Base, and Polygon PoS.
-   - Initial support for Scroll, with plans for expanding to more EVM-compatible networks.
-
-4. **Future Proofing**:
-   - The project is designed to integrate with upcoming storage proof solutions like Axiom and Herodotus.
-   - Plans to expand support to a broader range of networks as these technologies mature.
-
-5. **Documentation and Developer Support**:
-   - Comprehensive documentation available for setup, deployment, and usage.
-   - Active community and GitHub repository for contributions and support.
-
+### Documentation and Developer Support
+- Comprehensive documentation is available for setup, deployment, and usage.
+- Active community and GitHub repository for contributions and support.
 
 ## Detailed Documentation
 
 ### 1. Architecture Overview
+The **Worldcoin Scroll Bridge** architecture is designed to ensure secure and efficient cross-chain communication. Key components include:
 
-The **Worldcoin Scroll Bridge** architecture is designed to ensure secure and efficient cross-chain communication. The primary components include:
+- **Mainnet Contract**: Deployed on Ethereum mainnet, this contract uses the `latestRoot()` method from the `WorldIDIdentityManagerImplV1` contract to fetch the latest World ID Merkle tree root. It then sends this root to the Scroll network via the native L1 <> L2 messaging layer.
 
-- **Mainnet Contract**: The contract on Ethereum mainnet fetches the latest World ID Merkle tree root from the `WorldIDIdentityManagerImplV1` contract using the `latestRoot()` method. This root is then sent to the target L2 networks using the native L1 <> L2 messaging layer.
-  
-- **L2 Contract**: The contract on the L2 network receives the propagated root and updates its state. Ownership and authorization checks are handled by the `CrossDomainOwnable3` contract, ensuring only the mainnet contract can initiate root propagation.
+- **Scroll Contract**: Deployed on Scroll, this contract receives the propagated root and updates its state. It ensures that only the mainnet contract can initiate root propagation, handled by the `CrossDomainOwnable3` contract.
 
-- **Relayer Service**: A Rust-based service that periodically calls the `propagateRoot()` function on the L2 contract. It is responsible for ensuring that the World ID root is consistently propagated to the target networks.
+- **Relayer Service**: Periodically calls the `propagateRoot()` function on the Scroll contract to ensure the World ID root is consistently propagated.
 
-### 2. Supported Networks
+### 2. Specification for Building State Bridges
+If you are looking to build your own state bridge, the `OpStateBridge` contract can serve as a template. Key methods to implement include:
+- **`propagateRoot()`**: Method to propagate the latest World ID root to the target contract.
+- **`setRootHistoryExpiry()`**: Method to manage the expiry of root history.
 
-The **Worldcoin Scroll Bridge** currently supports the following networks:
-
-- **Polygon PoS**: Provides backward compatibility with earlier versions of the World ID system.
-- **Optimism**: Uses the Optimism cross-domain messenger for root propagation.
-- **Base**: Fully integrated with the World ID system.
-- **Scroll**: Initial support with ongoing improvements and optimizations.
-
-### 3. Future Integrations
-
-The bridge is designed to support additional networks in the future, with a focus on storage proof solutions such as Axiom and Herodotus. These integrations will enable seamless and cost-effective cross-chain identity verification, expanding World ID's reach to a wider range of blockchain environments.
-
-### 4. Relayer Service Implementation
-
-The **Relayer Service** automates the process of propagating the World ID root from Ethereum mainnet to the Scroll network. Key implementation details include:
-
-- **Rust Environment Setup**: The service is implemented in Rust, ensuring high performance and reliability. It uses a cron job to schedule periodic calls to the `propagateRoot()` function.
-  
-- **Interaction with Smart Contracts**: The service interacts with the ScrollStateBridge contract on the L2 network, sending transactions to propagate the World ID root.
-
-- **Production Deployment**: The service is containerized using Docker for easy deployment and scaling. Monitoring and logging are integrated to ensure smooth operation.
-
-### 5. Installation and Setup
-
+### 3. Installation and Setup
 To set up the **Worldcoin Scroll Bridge** and the accompanying Relayer Service, follow these steps:
 
 #### Install Dependencies
-
-Clone the repository and install the necessary dependencies:
-
 ```bash
 git clone https://github.com/worldcoin-scroll-bridge.git
 cd worldcoin-scroll-bridge
 make install
 ```
-**Build Contracts**
-Compile the smart contracts:
 
-```
+#### Build Contracts
+Compile the smart contracts:
+```bash
 make build
 ```
 
-**Clean Build Artifacts**
+#### Clean Build Artifacts
 Remove build artifacts and cache directories:
-
-```
+```bash
 make clean
 ```
-**Usage Guide**
-Deploying Contracts
-Deploy the contracts to the desired network using the provided deployment scripts. Ensure that the target network supports the required cryptographic operations and messaging protocols.
 
-**Running the Relayer Service**
-Set up and run the Relayer Service to automate the propagation of the World ID root:
+### Usage Guide
 
-1. Initialize Rust Environment: Ensure Rust is installed and set up on your system.
-2. Install Required Packages:  Install the necessary Rust crates for Ethereum client interaction and cron scheduling.
-3. Run the Service: Execute the Rust program to start the Relayer Service, and monitor the logs to ensure successful root propagation.
-4. Deployment and Production
-For deploying the Worldcoin Scroll Bridge and Relayer Service in a production environment, follow these steps:
+#### Deploying Contracts
+Deploy the contracts to Ethereum mainnet and the Scroll network using the provided deployment scripts. Ensure the target network supports necessary cryptographic operations and messaging protocols.
 
-- Dockerize the Service: Use Docker to containerize the service, making it easier to deploy and manage across different environments.
-- Set Up Monitoring: Integrate monitoring tools to track the performance and reliability of the Relayer Service.
-- Security Best Practices: Implement security measures to protect private keys and sensitive data, ensuring the integrity of the bridge.
-- Contributing to the Project
-We welcome contributions from the community to improve the Worldcoin Scroll Bridge. Whether it's fixing bugs, adding new features, or improving documentation, your input is valuable.
-### **Contributions**
-- Fork the Repository: Start by forking the repository and cloning it locally.
-- Make Your Changes: Implement your changes and test them thoroughly.
-- Submit a Pull Request: Once you're satisfied with your changes, submit a pull request for review.
-For detailed guidelines, refer to the CONTRIBUTING.md file in the repository.
+#### Running the Relayer Service
+1. **Initialize Rust Environment**: Ensure Rust is installed on your system.
+2. **Install Required Packages**: Install necessary Rust crates for Ethereum client interaction and cron scheduling.
+3. **Run the Service**: Execute the Rust program to start the Relayer Service and monitor the logs for successful root propagation.
 
-License
-The Worldcoin Scroll Bridge project is licensed under the MIT License. For more information, see the LICENSE file in the repository.
+### Deployment and Production
+
+#### Dockerize the Service
+Use **Docker** to containerize the service for deployment and management.
+
+#### Set Up Monitoring
+Integrate monitoring tools to track the performance and reliability of the Relayer Service.
+
+#### Security Best Practices
+Implement measures to protect private keys and sensitive data, ensuring the bridge's integrity.
+
+
+
+## Contributing to the Project
+
+We welcome contributions to improve the **Worldcoin Scroll Bridge**. Whether fixing bugs, adding new features, or improving documentation, your input is valuable.
+
+### Contributions
+1. **Fork the Repository**: Fork and clone the repository locally.
+2. **Make Your Changes**: Implement and test your changes.
+3. **Submit a Pull Request**: Submit a pull request for review. Refer to the `CONTRIBUTING.md` file for guidelines.
+
+### Additional Resources
+- [Pull Request #112: Enhancements and Fixes](https://github.com/worldcoin/world-id-state-bridge/pull/112)
+
+This README is tailored specifically for the **Worldcoin Scroll Bridge** and reflects accurate details and resources. If you have any further updates or corrections, please let me know!
