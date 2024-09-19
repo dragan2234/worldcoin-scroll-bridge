@@ -101,5 +101,3 @@ We welcome contributions to improve the **Worldcoin Scroll Bridge**. Whether fix
 
 ### Additional Resources
 - [Pull Request #112: Enhancements and Fixes](https://github.com/worldcoin/world-id-state-bridge/pull/112)
-
-This README is tailored specifically for the **Worldcoin Scroll Bridge** and reflects accurate details and resources. If you have any further updates or corrections, please let me know!
