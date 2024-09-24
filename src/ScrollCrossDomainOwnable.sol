@@ -14,11 +14,11 @@ abstract contract ScrollCrossDomainOwnable is Ownable {
     /// @notice The L2ScrollMessenger is used to check whether a call is coming from L1.
     /// @dev Sepolia address on Scroll for the L2ScrollMessenger:
     /// https://docs.scroll.io/en/developers/scroll-contracts/
-    address scrollMessengerAddress = address(0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d);
-    IL2ScrollMessenger public messenger = IL2ScrollMessenger(scrollMessengerAddress);
+    address public immutable scrollMessengerAddress;
+    IL2ScrollMessenger public messenger;
 
-    /// @notice If true, the contract uses the cross domain _checkOwner function override.
-    ///         If false it uses the standard Ownable _checkOwner function.
+    /// @notice If true, the contract uses the standard Ownable _checkOwner function.
+    ///         If false it false uses the cross domain _checkOwner function override.
     bool public isLocal = true;
 
     /// @notice Emits when ownership of the contract is transferred. Includes the
@@ -29,6 +29,12 @@ abstract contract ScrollCrossDomainOwnable is Ownable {
     event OwnershipTransferred(
         address indexed previousOwner, address indexed newOwner, bool isLocal
     );
+
+    /// @notice Initializes the scrollMessengerAddress
+    constructor(address _messenger) {
+        scrollMessengerAddress = _messenger;
+        messenger = IL2ScrollMessenger(scrollMessengerAddress);
+    }
 
     /// @notice Allows for ownership to be transferred with specifying the locality.
     /// @param _owner   The new owner of the contract.
