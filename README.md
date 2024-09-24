@@ -18,10 +18,10 @@ The core principle of the bridge contracts is to fetch the latest root of the Wo
 
 The Worldcoin Scroll Bridge project is currently in a stable state with the following components fully functional:
 
-State Bridge Contracts:
+1.State Bridge Contracts:
 Deployed on Ethereum mainnet and supported L2 networks.
 
-Relayer Service:
+2. Relayer Service:
 Implemented in Rust to automate root propagation.
 Runs on a cron job schedule, ensuring regular updates.
 Tested and ready for deployment in both development and production environments.
@@ -89,7 +89,7 @@ To successfully deploy and operate the Scroll Bridge, the following prerequisite
    - Set up the relayer service (e.g., [`state-bridge-relay`](https://github.com/worldcoin/state-bridge-relay)) to periodically trigger the `propagateRoot()` function on Ethereum.
 
 4. **Set Up L1<>L2 Messaging Contracts**:
-   - Deploy the necessary L1<>L2 messaging contracts for Scroll and ensure proper communication between Ethereum and Scroll. rust
+   - Deploy the necessary L1<>L2 messaging contracts for Scroll and ensure proper communication between Ethereum and Scroll.
 
 ## Deployment and Messaging
 
