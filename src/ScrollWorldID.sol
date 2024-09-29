@@ -2,9 +2,7 @@
 pragma solidity ^0.8.15;
 
 import {WorldIDBridge} from "./abstract/WorldIDBridge.sol";
-import {IL2ScrollMessenger} from "@scroll-tech/contracts/L2/IL2ScrollMessenger.sol";
 import {IScrollWorldID} from "./interfaces/IScrollWorldID.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ScrollCrossDomainOwnable} from "./ScrollCrossDomainOwnable.sol";
 
 /// @title Scroll World ID Bridge
