@@ -9,7 +9,7 @@ optimizer = true
 optimizer_runs = 10_000
 evm_version = "shanghai"
 fuzz = {runs = 256}
-fs_permissions = [{ access = "read", path = "./"}]
+fs_permissions = [{ access = "read-write", path = "./"}]
 
 src="src"
 libs = ["lib"]
@@ -97,7 +97,6 @@ gas_reports = [
 [profile.production]
 # We make the optimiser run a lot more for production, hoping to reduce our gas
 # costs.
-fs_permissions = [{ access = "read", path = "./"}]
 optimizer_runs = 20000
 
 [rpc_endpoints]
