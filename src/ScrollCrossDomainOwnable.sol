@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.16;
+pragma solidity ^0.8.24;
 
 import {IL2ScrollMessenger} from "@scroll-tech/contracts/L2/IL2ScrollMessenger.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
@@ -41,6 +41,7 @@ abstract contract ScrollCrossDomainOwnable is Ownable {
     /// @param _isLocal Configures the locality of the ownership.
     function transferOwnership(address _owner, bool _isLocal) external onlyOwner {
         require(_owner != address(0), "ScrollCrossDomainOwnable: new owner is the zero address");
+
         address oldOwner = owner();
         _transferOwnership(_owner);
         isLocal = _isLocal;
@@ -62,7 +63,7 @@ abstract contract ScrollCrossDomainOwnable is Ownable {
 
             require(
                 owner() == messenger.xDomainMessageSender(),
-                "ScrollCrossDomainOwnable: caller is not the bridge"
+                "ScrollCrossDomainOwnable: caller is not the owner"
             );
         }
     }

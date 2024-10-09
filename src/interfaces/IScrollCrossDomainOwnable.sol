@@ -1,6 +1,6 @@
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.27;
 
-/// @title Optimism - ScrollCrossDomainOwnable Interface
+/// @title ScrollCrossDomainOwnable Interface
 /// @author Worldcoin
 /// @notice Interface for the CrossDomainOwnable contract for the Scroll L2
 /// @dev Adds functionality to the StateBridge to transfer ownership
