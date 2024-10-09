@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.27;
 
 import {IWorldIDIdentityManager} from "./interfaces/IWorldIDIdentityManager.sol";
 import {Ownable2Step} from "openzeppelin-contracts/access/Ownable2Step.sol";

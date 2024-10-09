@@ -18,15 +18,13 @@ contract CrossTransferOwnershipOfScrollWorldID is Script {
     ///                            CONFIG                           ///
     ///////////////////////////////////////////////////////////////////
     uint256 public privateKey = vm.envUint("PRIVATE_KEY");
-    address public scrollStateBridgeAddress = vm.envAddress("SCROLL_STATE_BRIDGE");
-    address public newOwner = vm.envAddress("NEW_OWNER");
-
-    constructor() {}
+    address public newOwner = vm.envAddress("NEW_SCROLL_WORLD_ID_OWNER");
+    address public scrollStateBridgeAddress = vm.envAddress("SCROLL_STATE_BRIDGE_ADDRESS");
 
     function run() public {
         /// @notice cross domain ownership flag
         /// false = cross domain (address on Ethereum)
-        /// true = local (address on Optimism)
+        /// true = local (address on Scroll)
         isLocal = false;
 
         vm.startBroadcast(privateKey);

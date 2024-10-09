@@ -13,12 +13,14 @@ contract SetGasLimitScroll is Script {
     ///                            CONFIG                           ///
     ///////////////////////////////////////////////////////////////////
     uint256 public privateKey = vm.envUint("PRIVATE_KEY");
-    address public scrollStateBridgeAddress = vm.envAddress("SCROLL_STATE_BRIDGE");
+
+    address public scrollStateBridgeAddress = vm.envAddress("SCROLL_STATE_BRIDGE_ADDRESS");
 
     ///////////////////////////////////////////////////////////////////
-    ///                       SCROLL GAS LIMIT                      ///
+    ///                      SCROLL GAS LIMITS                      ///
     ///////////////////////////////////////////////////////////////////
-    uint32 public gasLimitPropagateRootScroll = uint32(vm.envUint("GAS_LIMIT_SEND_ROOT_SCROLL"));
+    uint32 public gasLimitPropagateRootScroll =
+        uint32(vm.envUint("GAS_LIMIT_PROPAGATE_ROOT_SCROLL"));
     uint32 public gasLimitSetRootHistoryExpiryScroll =
         uint32(vm.envUint("GAS_LIMIT_SET_ROOT_HISTORY_EXPIRY_SCROLL"));
     uint32 public gasLimitTransferOwnershipScroll =
