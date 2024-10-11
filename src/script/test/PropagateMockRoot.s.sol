@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 import {Script} from "forge-std/Script.sol";
-import {MockStateBridge} from "src/mock/MockStateBridge.sol";
+import {MockStateBridge} from "src/mocks/MockStateBridge.sol";
 
 /// @title Propagate Mock Root test script
 /// @author Worldcoin

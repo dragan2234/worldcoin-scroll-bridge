@@ -4,7 +4,7 @@ pragma solidity ^0.8.15;
 import "forge-std/Test.sol";
 
 import {ScrollStateBridge} from "src/ScrollStateBridge.sol";
-import {MockWorldIDIdentityManager} from "src/mock/MockWorldIDIdentityManager.sol";
+import {MockWorldIDIdentityManager} from "src/mocks/MockWorldIDIdentityManager.sol";
 import {ScrollWorldID} from "src/ScrollWorldID.sol";
 
 import {PRBTest} from "@prb/test/PRBTest.sol";
