@@ -4,7 +4,8 @@
 
 [profile.default]
 
-auto_detect_solc = true
+solc = "0.8.16"
+auto_detect_solc = false
 optimizer = true
 optimizer_runs = 10_000
 evm_version = "shanghai"

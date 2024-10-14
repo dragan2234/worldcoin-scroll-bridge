@@ -1,4 +1,4 @@
-pragma solidity ^0.8.27;
+pragma solidity ^0.8.16;
 
 /// @title IScrollStateBridgeTransferOwnership
 /// @notice Interface for the StateBridge to transfer ownership
