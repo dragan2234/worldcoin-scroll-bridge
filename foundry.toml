@@ -4,7 +4,8 @@
 
 [profile.default]
 
-solc = "0.8.16"
+
+auto_detect_solc = true
 optimizer = true
 optimizer_runs = 10_000
 evm_version = "shanghai"
@@ -18,7 +19,6 @@ test = "test"
 
 gas_reports = ["*"]
 
-auto_detect_solc = false
 bytecode_hash = "none"
 
 remappings = [
