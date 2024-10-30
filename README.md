@@ -27,6 +27,9 @@ Runs on a cron job schedule, ensuring regular updates.
 Tested and ready for deployment in both development and production environments.
 
 
+More about the Relayed Service setup can be found in this PR together with the video explanation how to setup locally:
+https://github.com/dragan2234/worldcoin-scroll-bridge/pull/17
+
 
 ### Architecture Overview
 The Worldcoin Scroll Bridge architecture is designed to ensure secure and efficient cross-chain communication. The primary components include:
