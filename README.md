@@ -18,7 +18,7 @@ The core principle of the bridge contracts is to fetch the latest root of the Wo
 
 The Worldcoin Scroll Bridge project is currently in a stable state with the following components fully functional:
 
-1.State Bridge Contracts:
+1. State Bridge Contracts:
 Deployed on Ethereum mainnet and supported L2 networks.
 
 2. Relayer Service:
